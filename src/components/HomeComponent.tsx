@@ -168,7 +168,7 @@ npm run dev`}
 
       <TanStackStartCLI />
 
-      <section className="px-6 max-w-7xl mx-auto space-y-16">
+      <section className="px-6 max-w-7xl mx-auto space-y-16 mt-8">
         {sections.map((section) => (
           <div key={section.title}>
             <div className="flex items-center gap-4 mb-8">

@@ -73,9 +73,6 @@ export default function Header() {
       >
         <div className="flex items-center justify-between p-4 border-b border-gray-800 bg-gray-900/50">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded bg-cyan-500 flex items-center justify-center font-bold">
-              T
-            </div>
             <h2 className="text-lg font-bold">Explorer</h2>
           </div>
           <button
@@ -133,7 +130,7 @@ export default function Header() {
 
         <div className="p-4 border-t border-gray-800 text-[10px] text-gray-500 flex justify-between uppercase tracking-tighter">
           <span>v1.132.0</span>
-          <span>TanStack SDK</span>
+          <span>TanStack </span>
         </div>
       </aside>
     </>
