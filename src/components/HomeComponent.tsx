@@ -1,53 +1,92 @@
+import { Link } from "@tanstack/react-router";
 import { TanStackStartCLI } from "./TanStackStartCLI";
 import {
-  Zap,
   Server,
-  Route as RouteIcon,
-  Shield,
-  Waves,
+  Smartphone,
+  Layout,
+  ChevronRight,
+  FileCode,
+  Globe,
   Sparkles,
 } from "lucide-react";
+
 export default function HomeComponent() {
-  const features = [
+  const sections = [
     {
-      icon: <Zap className="w-12 h-12 text-cyan-400" />,
-      title: "Powerful Server Functions",
-      description:
-        "Write server-side code that seamlessly integrates with your client components. Type-safe, secure, and simple.",
+      title: "Data Fetching",
+      features: [
+        {
+          to: "/SSR",
+          icon: <Server className="w-12 h-12 text-cyan-400" />,
+          title: "SSR Preloading",
+          description:
+            "Data is prefetched on the server and injected into the initial HTML. Perfect for SEO and performance.",
+          color: "border-cyan-500/50 hover:shadow-cyan-500/10",
+        },
+        {
+          to: "/CSR",
+          icon: <Smartphone className="w-12 h-12 text-yellow-400" />,
+          title: "CSR Client-side",
+          description:
+            "Standard client-side fetching using TanStack Query hooks. Features loading states and caching.",
+          color: "border-yellow-500/50 hover:shadow-yellow-500/10",
+        },
+      ],
     },
     {
-      icon: <Server className="w-12 h-12 text-cyan-400" />,
-      title: "Flexible Server Side Rendering",
-      description:
-        "Full-document SSR, streaming, and progressive enhancement out of the box. Control exactly what renders where.",
+      title: "Layouts & Architecture",
+      features: [
+        {
+          to: "/outlet",
+          icon: <Layout className="w-12 h-12 text-purple-400" />,
+          title: "Outlet Layout",
+          description:
+            "Demonstrating nested routing with layout components that wrap child pages seamlessly.",
+          color: "border-purple-500/50 hover:shadow-purple-500/10",
+        },
+        {
+          to: "/outlet/child",
+          icon: <ChevronRight className="w-12 h-12 text-pink-400" />,
+          title: "Outlet Child",
+          description:
+            "A child route rendered within its parent's outlet, inheriting styles and context.",
+          color: "border-pink-500/50 hover:shadow-pink-500/10",
+        },
+      ],
     },
     {
-      icon: <RouteIcon className="w-12 h-12 text-cyan-400" />,
-      title: "API Routes",
-      description:
-        "Build type-safe API endpoints alongside your application. No separate backend needed.",
-    },
-    {
-      icon: <Shield className="w-12 h-12 text-cyan-400" />,
-      title: "Strongly Typed Everything",
-      description:
-        "End-to-end type safety from server to client. Catch errors before they reach production.",
-    },
-    {
-      icon: <Waves className="w-12 h-12 text-cyan-400" />,
-      title: "Full Streaming Support",
-      description:
-        "Stream data from server to client progressively. Perfect for AI applications and real-time updates.",
-    },
-    {
-      icon: <Sparkles className="w-12 h-12 text-cyan-400" />,
-      title: "Next Generation Ready",
-      description:
-        "Built from the ground up for modern web applications. Deploy anywhere JavaScript runs.",
+      title: "Routing Patterns",
+      features: [
+        {
+          to: "/staticRoute",
+          icon: <FileCode className="w-12 h-12 text-blue-400" />,
+          title: "Static Index",
+          description:
+            "Simple file-based routing with index files acting as the root of a path group.",
+          color: "border-blue-500/50 hover:shadow-blue-500/10",
+        },
+        {
+          to: "/dynamic/123",
+          icon: <Sparkles className="w-12 h-12 text-green-400" />,
+          title: "Dynamic Route",
+          description:
+            "Access path parameters with full type safety using the useParams hook and route context.",
+          color: "border-green-500/50 hover:shadow-green-500/10",
+        },
+        {
+          to: "/rest/demo-path/second-path",
+          icon: <Globe className="w-12 h-12 text-orange-400" />,
+          title: "Catch-all Splat",
+          description:
+            "Handle nested paths of any depth using splat routes, ideal for CMS or dynamic hierarchies.",
+          color: "border-orange-500/50 hover:shadow-orange-500/10",
+        },
+      ],
     },
   ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-1 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 pb-20">
       <section className="relative py-20 px-6 text-center overflow-hidden">
         {/* Background glow */}
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-purple-500/10" />
@@ -98,40 +137,57 @@ export default function HomeComponent() {
             {/* Terminal content */}
             <pre className="p-4 text-sm font-mono text-gray-200 leading-relaxed overflow-x-auto">
               {`# Create a new TanStack Start project
-    npm create @tanstack/start@latest
-    
-    # or using the official CLI
-    npx @tanstack/cli create
-    
-    # Move into your project
-    cd my-tanstack-start-app
-    
-    # Start development server
-    npm run dev
-    `}
+npm create @tanstack/start@latest
+
+# or using the official CLI
+npx @tanstack/cli create
+
+# Move into your project
+cd my-tanstack-start-app
+
+# Start development server
+npm run dev`}
             </pre>
           </div>
         </div>
       </section>
 
       <TanStackStartCLI />
-      <section className="py-16 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10"
-            >
-              <div className="mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                {feature.title}
-              </h3>
-              <p className="text-gray-400 leading-relaxed">
-                {feature.description}
-              </p>
+
+      <section className="px-6 max-w-7xl mx-auto space-y-16">
+        {sections.map((section) => (
+          <div key={section.title}>
+            <div className="flex items-center gap-4 mb-8">
+              <h2 className="text-2xl font-bold text-white uppercase tracking-widest text-sm bg-slate-800 px-4 py-2 rounded-full border border-slate-700">
+                {section.title}
+              </h2>
+              <div className="h-px bg-slate-800 flex-1" />
             </div>
-          ))}
-        </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {section.features.map((feature, index) => (
+                <Link
+                  key={index}
+                  to={feature.to}
+                  className={`bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg ${feature.color}`}
+                >
+                  <div className="mb-4 transform group-hover:scale-110 transition-transform">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-3">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-400 leading-relaxed">
+                    {feature.description}
+                  </p>
+                  <div className="mt-4 flex items-center gap-2 text-sm font-bold text-gray-500 group-hover:text-white transition-colors">
+                    Explore Demo <ChevronRight size={14} />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        ))}
       </section>
     </div>
   );

@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { productsQueryOptions } from "../api/products";
 import { Loader2 } from "lucide-react";
+import { productsQueryOptions } from "@/api/products";
 
-export const Route = createFileRoute("/csr")({
+export const Route = createFileRoute("/CSR/")({
   component: CSRComponent,
 });
 
@@ -14,7 +14,9 @@ function CSRComponent() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-white">
         <Loader2 className="w-12 h-12 animate-spin text-cyan-400 mb-4" />
-        <p className="text-xl font-medium animate-pulse">Loading products on the client...</p>
+        <p className="text-xl font-medium animate-pulse">
+          Loading products on the client...
+        </p>
       </div>
     );
   }
@@ -31,11 +33,13 @@ function CSRComponent() {
     <div className="p-6 bg-gray-900 min-h-screen text-white">
       <div className="max-w-4xl mx-auto">
         <header className="mb-8">
-          <h1 className="text-3xl font-bold text-yellow-400">CSR Data Fetching</h1>
+          <h1 className="text-3xl font-bold text-yellow-400">
+            CSR Data Fetching
+          </h1>
           <p className="text-gray-400 mt-2">
-            This data is fetched <strong>after</strong> the component mounts on the client.
-            You should have seen a loading spinner briefly. If you "View Source",
-            you won't see the product data in the initial HTML.
+            This data is fetched <strong>after</strong> the component mounts on
+            the client. You should have seen a loading spinner briefly. If you
+            "View Source", you won't see the product data in the initial HTML.
           </p>
         </header>
 

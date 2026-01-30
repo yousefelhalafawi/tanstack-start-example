@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { productsQueryOptions } from "../api/products";
+import { productsQueryOptions } from "@/api/products";
 
-export const Route = createFileRoute("/ssr")({
+export const Route = createFileRoute("/SSR/")({
   loader: ({ context: { queryClient } }) =>
     queryClient.ensureQueryData(productsQueryOptions()),
   component: SSRComponent,
@@ -16,7 +16,9 @@ function SSRComponent() {
     <div className="p-6 bg-gray-900 min-h-screen text-white">
       <div className="max-w-4xl mx-auto">
         <header className="mb-8">
-          <h1 className="text-3xl font-bold text-cyan-400">SSR Data Fetching</h1>
+          <h1 className="text-3xl font-bold text-cyan-400">
+            SSR Data Fetching
+          </h1>
           <p className="text-gray-400 mt-2">
             This data was prefetched on the server. If you "View Source", you'll
             see the product titles in the initial HTML.

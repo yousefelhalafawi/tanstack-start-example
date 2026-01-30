@@ -9,29 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SsrRouteImport } from './routes/ssr'
 import { Route as OutletRouteImport } from './routes/outlet'
-import { Route as CsrRouteImport } from './routes/csr'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StaticRouteIndexRouteImport } from './routes/staticRoute/index'
+import { Route as SSRIndexRouteImport } from './routes/SSR/index'
+import { Route as CSRIndexRouteImport } from './routes/CSR/index'
 import { Route as StaticRouteChildRouteImport } from './routes/staticRoute/child'
 import { Route as RestSplatRouteImport } from './routes/rest/$'
 import { Route as OutletChildRouteImport } from './routes/outlet/child'
 import { Route as DynamicIdRouteImport } from './routes/dynamic/$id'
 
-const SsrRoute = SsrRouteImport.update({
-  id: '/ssr',
-  path: '/ssr',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const OutletRoute = OutletRouteImport.update({
   id: '/outlet',
   path: '/outlet',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CsrRoute = CsrRouteImport.update({
-  id: '/csr',
-  path: '/csr',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -42,6 +32,16 @@ const IndexRoute = IndexRouteImport.update({
 const StaticRouteIndexRoute = StaticRouteIndexRouteImport.update({
   id: '/staticRoute/',
   path: '/staticRoute/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SSRIndexRoute = SSRIndexRouteImport.update({
+  id: '/SSR/',
+  path: '/SSR/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CSRIndexRoute = CSRIndexRouteImport.update({
+  id: '/CSR/',
+  path: '/CSR/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StaticRouteChildRoute = StaticRouteChildRouteImport.update({
@@ -67,106 +67,92 @@ const DynamicIdRoute = DynamicIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/csr': typeof CsrRoute
   '/outlet': typeof OutletRouteWithChildren
-  '/ssr': typeof SsrRoute
   '/dynamic/$id': typeof DynamicIdRoute
   '/outlet/child': typeof OutletChildRoute
   '/rest/$': typeof RestSplatRoute
   '/staticRoute/child': typeof StaticRouteChildRoute
+  '/CSR/': typeof CSRIndexRoute
+  '/SSR/': typeof SSRIndexRoute
   '/staticRoute/': typeof StaticRouteIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/csr': typeof CsrRoute
   '/outlet': typeof OutletRouteWithChildren
-  '/ssr': typeof SsrRoute
   '/dynamic/$id': typeof DynamicIdRoute
   '/outlet/child': typeof OutletChildRoute
   '/rest/$': typeof RestSplatRoute
   '/staticRoute/child': typeof StaticRouteChildRoute
+  '/CSR': typeof CSRIndexRoute
+  '/SSR': typeof SSRIndexRoute
   '/staticRoute': typeof StaticRouteIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/csr': typeof CsrRoute
   '/outlet': typeof OutletRouteWithChildren
-  '/ssr': typeof SsrRoute
   '/dynamic/$id': typeof DynamicIdRoute
   '/outlet/child': typeof OutletChildRoute
   '/rest/$': typeof RestSplatRoute
   '/staticRoute/child': typeof StaticRouteChildRoute
+  '/CSR/': typeof CSRIndexRoute
+  '/SSR/': typeof SSRIndexRoute
   '/staticRoute/': typeof StaticRouteIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/csr'
     | '/outlet'
-    | '/ssr'
     | '/dynamic/$id'
     | '/outlet/child'
     | '/rest/$'
     | '/staticRoute/child'
+    | '/CSR/'
+    | '/SSR/'
     | '/staticRoute/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/csr'
     | '/outlet'
-    | '/ssr'
     | '/dynamic/$id'
     | '/outlet/child'
     | '/rest/$'
     | '/staticRoute/child'
+    | '/CSR'
+    | '/SSR'
     | '/staticRoute'
   id:
     | '__root__'
     | '/'
-    | '/csr'
     | '/outlet'
-    | '/ssr'
     | '/dynamic/$id'
     | '/outlet/child'
     | '/rest/$'
     | '/staticRoute/child'
+    | '/CSR/'
+    | '/SSR/'
     | '/staticRoute/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CsrRoute: typeof CsrRoute
   OutletRoute: typeof OutletRouteWithChildren
-  SsrRoute: typeof SsrRoute
   DynamicIdRoute: typeof DynamicIdRoute
   RestSplatRoute: typeof RestSplatRoute
   StaticRouteChildRoute: typeof StaticRouteChildRoute
+  CSRIndexRoute: typeof CSRIndexRoute
+  SSRIndexRoute: typeof SSRIndexRoute
   StaticRouteIndexRoute: typeof StaticRouteIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/ssr': {
-      id: '/ssr'
-      path: '/ssr'
-      fullPath: '/ssr'
-      preLoaderRoute: typeof SsrRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/outlet': {
       id: '/outlet'
       path: '/outlet'
       fullPath: '/outlet'
       preLoaderRoute: typeof OutletRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/csr': {
-      id: '/csr'
-      path: '/csr'
-      fullPath: '/csr'
-      preLoaderRoute: typeof CsrRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -181,6 +167,20 @@ declare module '@tanstack/react-router' {
       path: '/staticRoute'
       fullPath: '/staticRoute/'
       preLoaderRoute: typeof StaticRouteIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/SSR/': {
+      id: '/SSR/'
+      path: '/SSR'
+      fullPath: '/SSR/'
+      preLoaderRoute: typeof SSRIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/CSR/': {
+      id: '/CSR/'
+      path: '/CSR'
+      fullPath: '/CSR/'
+      preLoaderRoute: typeof CSRIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/staticRoute/child': {
@@ -227,12 +227,12 @@ const OutletRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CsrRoute: CsrRoute,
   OutletRoute: OutletRouteWithChildren,
-  SsrRoute: SsrRoute,
   DynamicIdRoute: DynamicIdRoute,
   RestSplatRoute: RestSplatRoute,
   StaticRouteChildRoute: StaticRouteChildRoute,
+  CSRIndexRoute: CSRIndexRoute,
+  SSRIndexRoute: SSRIndexRoute,
   StaticRouteIndexRoute: StaticRouteIndexRoute,
 }
 export const routeTree = rootRouteImport
