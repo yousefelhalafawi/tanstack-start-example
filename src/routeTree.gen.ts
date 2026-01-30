@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VsNextRouteImport } from './routes/vs-next'
 import { Route as OutletRouteImport } from './routes/outlet'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StaticRouteIndexRouteImport } from './routes/staticRoute/index'
@@ -19,6 +20,11 @@ import { Route as RestSplatRouteImport } from './routes/rest/$'
 import { Route as OutletChildRouteImport } from './routes/outlet/child'
 import { Route as DynamicIdRouteImport } from './routes/dynamic/$id'
 
+const VsNextRoute = VsNextRouteImport.update({
+  id: '/vs-next',
+  path: '/vs-next',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OutletRoute = OutletRouteImport.update({
   id: '/outlet',
   path: '/outlet',
@@ -68,6 +74,7 @@ const DynamicIdRoute = DynamicIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/outlet': typeof OutletRouteWithChildren
+  '/vs-next': typeof VsNextRoute
   '/dynamic/$id': typeof DynamicIdRoute
   '/outlet/child': typeof OutletChildRoute
   '/rest/$': typeof RestSplatRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/outlet': typeof OutletRouteWithChildren
+  '/vs-next': typeof VsNextRoute
   '/dynamic/$id': typeof DynamicIdRoute
   '/outlet/child': typeof OutletChildRoute
   '/rest/$': typeof RestSplatRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/outlet': typeof OutletRouteWithChildren
+  '/vs-next': typeof VsNextRoute
   '/dynamic/$id': typeof DynamicIdRoute
   '/outlet/child': typeof OutletChildRoute
   '/rest/$': typeof RestSplatRoute
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/outlet'
+    | '/vs-next'
     | '/dynamic/$id'
     | '/outlet/child'
     | '/rest/$'
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/outlet'
+    | '/vs-next'
     | '/dynamic/$id'
     | '/outlet/child'
     | '/rest/$'
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/outlet'
+    | '/vs-next'
     | '/dynamic/$id'
     | '/outlet/child'
     | '/rest/$'
@@ -138,6 +150,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   OutletRoute: typeof OutletRouteWithChildren
+  VsNextRoute: typeof VsNextRoute
   DynamicIdRoute: typeof DynamicIdRoute
   RestSplatRoute: typeof RestSplatRoute
   StaticRouteChildRoute: typeof StaticRouteChildRoute
@@ -148,6 +161,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vs-next': {
+      id: '/vs-next'
+      path: '/vs-next'
+      fullPath: '/vs-next'
+      preLoaderRoute: typeof VsNextRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/outlet': {
       id: '/outlet'
       path: '/outlet'
@@ -228,6 +248,7 @@ const OutletRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OutletRoute: OutletRouteWithChildren,
+  VsNextRoute: VsNextRoute,
   DynamicIdRoute: DynamicIdRoute,
   RestSplatRoute: RestSplatRoute,
   StaticRouteChildRoute: StaticRouteChildRoute,

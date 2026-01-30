@@ -12,6 +12,7 @@ import {
   FileCode,
   Globe,
   Sparkles,
+  ArrowRightLeft,
 } from "lucide-react";
 
 export default function Header() {
@@ -52,7 +53,7 @@ export default function Header() {
         >
           <Menu size={24} />
         </button>
-        <h1 className="ml-4 text-xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+        <h1 className="ml-4 text-xl font-bold bg-linear-to-r from-white to-gray-400 bg-clip-text text-transparent">
           <Link to="/">TanStack Start</Link>
         </h1>
       </header>
@@ -66,7 +67,7 @@ export default function Header() {
       )}
 
       <aside
-        className={`fixed top-0 left-0 h-full w-80 bg-[#0d1117] text-white shadow-2xl z-[60] transform transition-transform duration-300 ease-in-out flex flex-col border-r border-gray-800 ${
+        className={`fixed top-0 left-0 h-full w-80 bg-[#0d1117] text-white shadow-2xl z-60 transform transition-transform duration-300 ease-in-out flex flex-col border-r border-gray-800 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -119,6 +120,14 @@ export default function Header() {
             to="/rest/demo-path/second-path"
             label="Catch-all Splat"
             icon={Globe}
+          />
+
+          <SectionHeader label="Resources" />
+          <NavItem
+            to="/vs-next"
+            label="Compare Next.js"
+            icon={ArrowRightLeft}
+            colorClass="text-purple-400"
           />
         </nav>
 
