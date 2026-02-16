@@ -13,6 +13,8 @@ import {
   Globe,
   Sparkles,
   ArrowRightLeft,
+  AlertCircle,
+  CheckCircle2,
 } from "lucide-react";
 
 export default function Header() {
@@ -54,7 +56,7 @@ export default function Header() {
           <Menu size={24} />
         </button>
         <h1 className="ml-4 text-xl font-bold bg-linear-to-r from-white to-gray-400 bg-clip-text text-transparent">
-          <Link to="/">TanStack Start</Link>
+          <Link to="/">Halafawy playground</Link>
         </h1>
       </header>
 
@@ -125,6 +127,20 @@ export default function Header() {
             label="Compare Next.js"
             icon={ArrowRightLeft}
             colorClass="text-purple-400"
+          />
+
+          <SectionHeader label="Performance" />
+          <NavItem
+            to="/bad-practices"
+            label="Bad CWV"
+            icon={AlertCircle}
+            colorClass="text-red-400"
+          />
+          <NavItem
+            to="/good-practices"
+            label="Good CWV"
+            icon={CheckCircle2}
+            colorClass="text-green-400"
           />
         </nav>
 

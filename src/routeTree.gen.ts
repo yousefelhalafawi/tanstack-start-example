@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VsNextRouteImport } from './routes/vs-next'
 import { Route as OutletRouteImport } from './routes/outlet'
+import { Route as GoodPracticesRouteImport } from './routes/good-practices'
+import { Route as BadPracticesRouteImport } from './routes/bad-practices'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StaticRouteIndexRouteImport } from './routes/staticRoute/index'
 import { Route as SSRIndexRouteImport } from './routes/SSR/index'
@@ -28,6 +30,16 @@ const VsNextRoute = VsNextRouteImport.update({
 const OutletRoute = OutletRouteImport.update({
   id: '/outlet',
   path: '/outlet',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GoodPracticesRoute = GoodPracticesRouteImport.update({
+  id: '/good-practices',
+  path: '/good-practices',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BadPracticesRoute = BadPracticesRouteImport.update({
+  id: '/bad-practices',
+  path: '/bad-practices',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -73,6 +85,8 @@ const DynamicIdRoute = DynamicIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bad-practices': typeof BadPracticesRoute
+  '/good-practices': typeof GoodPracticesRoute
   '/outlet': typeof OutletRouteWithChildren
   '/vs-next': typeof VsNextRoute
   '/dynamic/$id': typeof DynamicIdRoute
@@ -85,6 +99,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bad-practices': typeof BadPracticesRoute
+  '/good-practices': typeof GoodPracticesRoute
   '/outlet': typeof OutletRouteWithChildren
   '/vs-next': typeof VsNextRoute
   '/dynamic/$id': typeof DynamicIdRoute
@@ -98,6 +114,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bad-practices': typeof BadPracticesRoute
+  '/good-practices': typeof GoodPracticesRoute
   '/outlet': typeof OutletRouteWithChildren
   '/vs-next': typeof VsNextRoute
   '/dynamic/$id': typeof DynamicIdRoute
@@ -112,6 +130,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/bad-practices'
+    | '/good-practices'
     | '/outlet'
     | '/vs-next'
     | '/dynamic/$id'
@@ -124,6 +144,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/bad-practices'
+    | '/good-practices'
     | '/outlet'
     | '/vs-next'
     | '/dynamic/$id'
@@ -136,6 +158,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/bad-practices'
+    | '/good-practices'
     | '/outlet'
     | '/vs-next'
     | '/dynamic/$id'
@@ -149,6 +173,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BadPracticesRoute: typeof BadPracticesRoute
+  GoodPracticesRoute: typeof GoodPracticesRoute
   OutletRoute: typeof OutletRouteWithChildren
   VsNextRoute: typeof VsNextRoute
   DynamicIdRoute: typeof DynamicIdRoute
@@ -173,6 +199,20 @@ declare module '@tanstack/react-router' {
       path: '/outlet'
       fullPath: '/outlet'
       preLoaderRoute: typeof OutletRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/good-practices': {
+      id: '/good-practices'
+      path: '/good-practices'
+      fullPath: '/good-practices'
+      preLoaderRoute: typeof GoodPracticesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bad-practices': {
+      id: '/bad-practices'
+      path: '/bad-practices'
+      fullPath: '/bad-practices'
+      preLoaderRoute: typeof BadPracticesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -247,6 +287,8 @@ const OutletRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BadPracticesRoute: BadPracticesRoute,
+  GoodPracticesRoute: GoodPracticesRoute,
   OutletRoute: OutletRouteWithChildren,
   VsNextRoute: VsNextRoute,
   DynamicIdRoute: DynamicIdRoute,
