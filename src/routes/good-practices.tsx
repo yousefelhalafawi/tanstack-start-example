@@ -8,7 +8,7 @@ export const Route = createFileRoute("/good-practices")({
 
 function GoodPractices() {
   const [showLateBanner, setShowLateBanner] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     // Late loading, but we will have reserved space
@@ -18,25 +18,14 @@ function GoodPractices() {
     return () => clearTimeout(timer);
   }, []);
 
-  const runHeavyTaskOptimized = async () => {
-    setIsProcessing(true);
-    
-    // Using a non-blocking approach (chunking) to keep the main thread responsive
-    const totalIterations = 100;
-    const chunkSize = 10;
-    
-    for (let i = 0; i < totalIterations; i += chunkSize) {
-      await new Promise(resolve => setTimeout(resolve, 50));
-      const start = Date.now();
-      while(Date.now() - start < 15) {} 
-    }
-    
-    setIsProcessing(false);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Normal, responsive state update
+    setSearchQuery(e.target.value);
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-950 text-white p-4 font-sans">
-      <div className="max-w-md mx-auto w-full space-y-8 py-10">
+      <div className="max-w-md mx-auto flag-w-full space-y-8 py-10">
         <header className="text-center space-y-2">
           <div className="inline-flex items-center justify-center p-3 bg-green-500/10 rounded-2xl mb-4 border border-green-500/20">
             <CheckCircle2 className="text-green-500" size={32} />
@@ -95,7 +84,7 @@ function GoodPractices() {
               alt="Optimized space image" 
               className="w-full aspect-video object-cover"
               // @ts-ignore
-              fetchpriority="high"
+              fetchPriority="high"
             />
             <div className="p-6">
               <p className="text-gray-400 text-sm leading-relaxed mb-4">
@@ -112,33 +101,34 @@ function GoodPractices() {
           </div>
         </section>
 
-        {/* FID / INP Fix Demonstration */}
+        {/* / INP Demonstration: Responsive Search */}
         <section className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl">
           <div className="p-4 border-b border-gray-800">
             <div className="flex items-center gap-2">
-              <MousePointerClick className="text-purple-500" size={20} />
-              <h2 className="font-bold">FID/INP: Main Thread Yielding</h2>
+              <MousePointerClick className="text-green-500" size={20} />
+              <h2 className="font-bold">INP: Fluid Interaction</h2>
             </div>
           </div>
           <div className="p-6">
             <p className="text-gray-400 text-sm mb-6">
-              This task runs in chunks, allowing the browser to process user interactions (like scrolls or clicks) in between work segments.
+              Try typing quickly in the box below. Typing is buttery smooth because the main thread is never blocked.
             </p>
-            <button 
-              onClick={runHeavyTaskOptimized}
-              disabled={isProcessing}
-              className={`w-full py-4 rounded-xl font-bold transition-all transform active:scale-95 ${
-                isProcessing 
-                  ? "bg-green-600/50 text-white cursor-default" 
-                  : "bg-green-600 hover:bg-green-500 text-white shadow-lg shadow-green-900/20"
-              }`}
-            >
-              {isProcessing ? "PROCESSING (STILL RESPONSIVE)" : "RUN OPTIMIZED TASK"}
-            </button>
             
-            <div className="mt-4 flex items-center gap-2 text-[10px] text-gray-500 italic">
-               <div className={`w-2 h-2 rounded-full ${isProcessing ? 'bg-green-500 animate-pulse' : 'bg-gray-700'}`}></div>
-               {isProcessing ? "Try scrolling or clicking elsewhere!" : "System Idle"}
+            <div className="space-y-4">
+              <div className="relative">
+                <input 
+                  type="text"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  placeholder="Type anything freely..."
+                  className="w-full bg-gray-800 border-2 border-gray-700 rounded-xl px-4 py-4 text-white focus:border-green-500 outline-none transition-colors"
+                />
+                {searchQuery && (
+                   <p className="mt-2 text-[10px] text-green-500 font-mono">
+                     ✨ Main thread remains responsive
+                   </p>
+                )}
+              </div>
             </div>
 
             <div className="mt-6 pt-6 border-t border-gray-800">
@@ -146,7 +136,7 @@ function GoodPractices() {
                 to="/bad-practices"
                 className="inline-flex items-center gap-2 text-xs text-purple-500 hover:text-purple-400 font-bold transition-colors"
               >
-                <ArrowLeft size={12} /> Compare with blocked FID/INP
+                <ArrowLeft size={12} /> Compare with blocked INP
               </Link>
             </div>
           </div>

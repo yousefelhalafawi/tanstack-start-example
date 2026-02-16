@@ -8,7 +8,7 @@ export const Route = createFileRoute("/bad-practices")({
 
 function BadPractices() {
   const [showLateBanner, setShowLateBanner] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     // Intentionally late loading to cause CLS
@@ -18,14 +18,17 @@ function BadPractices() {
     return () => clearTimeout(timer);
   }, []);
 
-  const runHeavyTask = () => {
-    setIsProcessing(true);
-    // Blocking the main thread for about 1 second to tank FID/INP
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value); 
+    
+    // INTENTIONAL BAD PRACTICE:
+    // Blocking the main thread for 150ms on EVERY keystroke.
+    // This makes the input feel "heavy" and disconnected.
     const start = Date.now();
-    while (Date.now() - start < 1500) {
-      // Intentional block
+    while (Date.now() - start < 150) {
+      // Blocking the paint of the new character
     }
-    setIsProcessing(false);
   };
 
   return (
@@ -42,28 +45,23 @@ function BadPractices() {
         <section className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl">
           <div className="p-4 border-b border-gray-800 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Zap className="text-yellow-500" size={20} />
-              <h2 className="font-bold">CLS: Layout Shift</h2>
+              <Zap className="text-red-500" size={20} />
+              <h2 className="font-bold">CLS: Late Loading Content</h2>
             </div>
-            <span className="text-[10px] px-2 py-1 bg-yellow-500/10 text-yellow-500 rounded-full font-mono">2.0s Delay</span>
           </div>
-          
           <div className="p-6">
-             {/* This banner will pop in and push the LCP image down, causing CLS */}
             {showLateBanner && (
-              <div className="mb-4 p-4 bg-blue-600 rounded-xl animate-in fade-in duration-300">
-                <p className="font-bold">🔥 Limited Offer!</p>
-                <p className="text-sm opacity-90">Free shipping for only 3 more hours. Don't miss out!</p>
+              <div className="p-4 bg-red-600 rounded-xl mb-4 animate-in fade-in slide-in-from-top-4 duration-500">
+                <p className="font-bold">⚠️ Layout Shift Occurred!</p>
+                <p className="text-sm opacity-90">This content popped in and pushed everything down.</p>
               </div>
             )}
-            
             <p className="text-gray-400 text-sm mb-4">
-              The content below will be shifted suddenly when the "Limited Offer" banner loads after 2 seconds without reserved space.
+              Refresh the page to see how the banner above shifts the page content down when it loads after 2 seconds.
             </p>
-            
             <Link 
               to="/good-practices"
-              className="inline-flex items-center gap-2 text-xs text-yellow-500 hover:text-yellow-400 font-bold transition-colors"
+              className="inline-flex items-center gap-2 text-xs text-red-500 hover:text-red-400 font-bold transition-colors"
             >
               Learn how to fix CLS <ArrowRight size={12} />
             </Link>
@@ -74,26 +72,23 @@ function BadPractices() {
         <section className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl">
            <div className="p-4 border-b border-gray-800">
             <div className="flex items-center gap-2">
-              <ImageIcon className="text-cyan-500" size={20} />
-              <h2 className="font-bold">LCP: Massive Unoptimized Image</h2>
+              <ImageIcon className="text-orange-500" size={20} />
+              <h2 className="font-bold">LCP: Unoptimized Image</h2>
             </div>
           </div>
           <div className="p-0">
-            {/* Massive unoptimized high-res image to tank LCP */}
             <img 
-              src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=3544&auto=format&fit=crop" 
-              alt="Massive space image" 
+              src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=100&w=3500&auto=format&fit=crop" 
+              alt="Heavy space image" 
               className="w-full aspect-video object-cover"
-              // Intentionally NOT using loading="lazy" or priority to make it even worse for LCP if it's above the fold
             />
             <div className="p-6">
               <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                Loading a 4MB+ raw image as the main hero element in a mobile view will significantly degrade the Largest Contentful Paint.
+                This image is way too large (3500px wide) and unoptimized, causing a very slow Largest Contentful Paint (LCP).
               </p>
-              
               <Link 
                 to="/good-practices"
-                className="inline-flex items-center gap-2 text-xs text-cyan-500 hover:text-cyan-400 font-bold transition-colors"
+                className="inline-flex items-center gap-2 text-xs text-orange-500 hover:text-orange-400 font-bold transition-colors"
               >
                 Learn how to fix LCP <ArrowRight size={12} />
               </Link>
@@ -101,36 +96,42 @@ function BadPractices() {
           </div>
         </section>
 
-        {/* FID / INP Demonstration */}
+        {/* / INP Demonstration: Laggy Search */}
         <section className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl">
           <div className="p-4 border-b border-gray-800">
             <div className="flex items-center gap-2">
               <MousePointerClick className="text-purple-500" size={20} />
-              <h2 className="font-bold">FID/INP: Main Thread Blocking</h2>
+              <h2 className="font-bold">INP: Laggy Interaction</h2>
             </div>
           </div>
           <div className="p-6">
             <p className="text-gray-400 text-sm mb-6">
-              Click the button below to trigger a 1.5s synchronous loop. The UI will freeze completely.
+              Try typing quickly in the box below. Notice how the characters "stick" and don't appear instantly because each keystroke blocks the main thread.
             </p>
-            <button 
-              onClick={runHeavyTask}
-              disabled={isProcessing}
-              className={`w-full py-4 rounded-xl font-bold transition-all transform active:scale-95 ${
-                isProcessing 
-                  ? "bg-gray-800 text-gray-500 cursor-not-allowed" 
-                  : "bg-purple-600 hover:bg-purple-500 text-white shadow-lg shadow-purple-900/20"
-              }`}
-            >
-              {isProcessing ? "THREAD BLOCKED..." : "RUN HEAVY TASK"}
-            </button>
+            
+            <div className="space-y-4">
+              <div className="relative">
+                <input 
+                  type="text"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  placeholder="Type 'Ramadan Kareem' quickly..."
+                  className="w-full bg-gray-800 border-2 border-gray-700 rounded-xl px-4 py-4 text-white focus:border-red-500 outline-none transition-colors"
+                />
+                {searchQuery && (
+                   <p className="mt-2 text-[10px] text-red-500 font-mono animate-pulse">
+                     ⚠️ Main thread blocked per keystroke
+                   </p>
+                )}
+              </div>
+            </div>
             
             <div className="mt-6 pt-6 border-t border-gray-800">
                <Link 
                 to="/good-practices"
                 className="inline-flex items-center gap-2 text-xs text-purple-500 hover:text-purple-400 font-bold transition-colors"
               >
-                Learn how to fix FID/INP <ArrowRight size={12} />
+                Learn how to fix INP <ArrowRight size={12} />
               </Link>
             </div>
           </div>
