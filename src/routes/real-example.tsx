@@ -25,12 +25,43 @@ function RealExample() {
     };
   }, []);
 
-const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+const blockMainThread = (ms: number) => {
+  const end = performance.now() + ms;
+  while (performance.now() < end) {}
+};
+
+const delay = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
+
+const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
   const value = e.target.value;
 
+  // ⏳ 1. Simulate network / debounce delay
+  await delay(300);
+
+  // ❌ 2. Hard block (guaranteed INP issue)
+  blockMainThread(300);
+
+  // ❌ 3. Heavy computation
+  let total = 0;
+  for (let i = 0; i < 50_000_000; i++) {
+    total += Math.sqrt(i);
+  }
+
+  // ❌ 4. Large filtering (real-world case)
+  const bigArray = new Array(200_000).fill(0).map((_, i) => ({
+  id: i,
+  name: "item " + i,
+}));
+  bigArray?.filter((item:any) =>
+    item.name.toLowerCase().includes(value.toLowerCase())
+  );
+
+  // ❌ 5. Extra async + blocking (worst case scenario)
   setTimeout(() => {
+    blockMainThread(300);
     setSearchQuery(value);
-  }, 500);
+  }, 200);
 };
 
   const handleAddToCart = () => {
