@@ -28,8 +28,10 @@ function RealExample() {
 const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
   const value = e.target.value;
 
-  // simulate heavy CPU work
-  const arr = new Array(50_000_000).fill(0).map((_, i) => i * Math.random());
+  const arr = [];
+  for (let i = 0; i < 100_000_000; i++) {
+    arr.push(i * Math.random());
+  }
 
   setSearchQuery(value);
 };
