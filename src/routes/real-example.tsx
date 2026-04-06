@@ -25,15 +25,14 @@ function RealExample() {
     };
   }, []);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // ❌ BAD INP: blocking main thread 200ms on every keystroke
-    const start = Date.now();
-    while (Date.now() - start < 500) {
-      // intentional busy-wait — simulates heavy synchronous JS
-    }
-    const value = e.target.value;
-    setSearchQuery(value);
-  };
+const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const value = e.target.value;
+
+  // simulate heavy CPU work
+  const arr = new Array(50_000_000).fill(0).map((_, i) => i * Math.random());
+
+  setSearchQuery(value);
+};
 
   const handleAddToCart = () => {
     // ❌ BAD INP: button click blocks the thread for 500ms before responding
