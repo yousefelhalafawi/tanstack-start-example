@@ -29,21 +29,17 @@ function BadPractices() {
     };
   }, []);
 
-  // Heavy CPU computation — can't be optimised away by JS engine or minifier
-  const blockMainThread = (n: number): number => {
-    if (n <= 1) return n;
-    return blockMainThread(n - 1) + blockMainThread(n - 2);
-  };
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchQuery(value);
 
     // INTENTIONAL BAD PRACTICE:
-    // Synchronous heavy computation on EVERY keystroke.
-    // fib(37) ≈ 400ms of real CPU work — blocks paint in dev AND production.
-    const _result = blockMainThread(37);
-    void _result; // prevent dead-code elimination
+    // performance.now() + Math.random() loop — can't be optimised away
+    // because Math.random() has side effects (modifies RNG state).
+    const end = performance.now() + 500;
+    while (performance.now() < end) {
+      Math.random();
+    }
   };
 
   return (

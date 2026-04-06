@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ArrowRight, ShoppingCart, Star, Shield, Truck } from "lucide-react";
 
 export const Route = createFileRoute("/real-example")({
@@ -25,27 +25,41 @@ function RealExample() {
     };
   }, []);
 
-  // ❌ Heavy CPU work — can't be optimised away by JS engine or minifier
-  const fib = (n: number): number => {
-    if (n <= 1) return n;
-    return fib(n - 1) + fib(n - 2);
-  };
+  // ❌ Tracking how many times we blocked (rendered in DOM = can't be eliminated)
+  const blockCount = useRef(0);
 
-  // ❌ BAD INP: MUST be synchronous — async/await yields to the browser
-  // and won't block INP. Only synchronous blocking during the event handler
-  // is measured by INP.
+  // ❌ BAD: Simulates heavy tracking scripts running on setInterval
+  // Blocks the main thread for 300ms every 2 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const end = performance.now() + 300;
+      while (performance.now() < end) {
+        // ❌ Simulates analytics / tracking scripts hogging the thread
+        Math.random();
+      }
+      blockCount.current++;
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // fib(38) ≈ 500ms of real synchronous CPU work
-    const _r = fib(38);
-    void _r; // prevent dead-code elimination
+    // ❌ BAD INP: block the main thread ~500ms synchronously
+    const end = performance.now() + 500;
+    while (performance.now() < end) {
+      Math.random(); // prevents the loop from being optimised away
+    }
+    blockCount.current++;
     setSearchQuery(value);
   };
 
   const handleAddToCart = () => {
-    // ❌ BAD INP: fib(38) blocks ~500ms before state update
-    const _r = fib(38);
-    void _r;
+    // ❌ BAD INP: block ~500ms before state update
+    const end = performance.now() + 500;
+    while (performance.now() < end) {
+      Math.random();
+    }
+    blockCount.current++;
     setAddedToCart(true);
   };
 
