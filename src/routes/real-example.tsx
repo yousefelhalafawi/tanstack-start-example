@@ -25,51 +25,27 @@ function RealExample() {
     };
   }, []);
 
-const blockMainThread = (ms: number) => {
-  const end = performance.now() + ms;
-  while (performance.now() < end) {}
-};
+  // ❌ Heavy CPU work — can't be optimised away by JS engine or minifier
+  const fib = (n: number): number => {
+    if (n <= 1) return n;
+    return fib(n - 1) + fib(n - 2);
+  };
 
-const delay = (ms: number) =>
-  new Promise((resolve) => setTimeout(resolve, ms));
-
-const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  const value = e.target.value;
-
-  // ⏳ 1. Simulate network / debounce delay
-  await delay(300);
-
-  // ❌ 2. Hard block (guaranteed INP issue)
-  blockMainThread(300);
-
-  // ❌ 3. Heavy computation
-  let total = 0;
-  for (let i = 0; i < 50_000_000; i++) {
-    total += Math.sqrt(i);
-  }
-
-  // ❌ 4. Large filtering (real-world case)
-  const bigArray = new Array(200_000).fill(0).map((_, i) => ({
-  id: i,
-  name: "item " + i,
-}));
-  bigArray?.filter((item:any) =>
-    item.name.toLowerCase().includes(value.toLowerCase())
-  );
-
-  // ❌ 5. Extra async + blocking (worst case scenario)
-  setTimeout(() => {
-    blockMainThread(300);
+  // ❌ BAD INP: MUST be synchronous — async/await yields to the browser
+  // and won't block INP. Only synchronous blocking during the event handler
+  // is measured by INP.
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // fib(38) ≈ 500ms of real synchronous CPU work
+    const _r = fib(38);
+    void _r; // prevent dead-code elimination
     setSearchQuery(value);
-  }, 200);
-};
+  };
 
   const handleAddToCart = () => {
-    // ❌ BAD INP: button click blocks the thread for 500ms before responding
-    const start = Date.now();
-    while (Date.now() - start < 500) {
-      // intentional busy-wait — simulates heavy cart calculation
-    }
+    // ❌ BAD INP: fib(38) blocks ~500ms before state update
+    const _r = fib(38);
+    void _r;
     setAddedToCart(true);
   };
 
