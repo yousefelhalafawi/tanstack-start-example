@@ -9,26 +9,41 @@ export const Route = createFileRoute("/bad-practices")({
 function BadPractices() {
   const [showLateBanner, setShowLateBanner] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  // ❌ BAD LCP: image src injected by JS after load — browser can't preload it
+  const [heroSrc, setHeroSrc] = useState("");
 
   useEffect(() => {
     // Intentionally late loading to cause CLS
     const timer = setTimeout(() => {
       setShowLateBanner(true);
     }, 2000);
-    return () => clearTimeout(timer);
+    // ❌ BAD LCP: image URL set via JS after 3.5s — simulates real-world JS-injected hero
+    const lcpTimer = setTimeout(() => {
+      setHeroSrc(
+        `https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=100&w=3500&auto=format&fit=crop&bust=${Date.now()}`
+      );
+    }, 3500);
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(lcpTimer);
+    };
   }, []);
+
+  // Heavy CPU computation — can't be optimised away by JS engine or minifier
+  const blockMainThread = (n: number): number => {
+    if (n <= 1) return n;
+    return blockMainThread(n - 1) + blockMainThread(n - 2);
+  };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setSearchQuery(value); 
-    
+    setSearchQuery(value);
+
     // INTENTIONAL BAD PRACTICE:
-    // Blocking the main thread for 150ms on EVERY keystroke.
-    // This makes the input feel "heavy" and disconnected.
-    const start = Date.now();
-    while (Date.now() - start < 400) {
-      // Blocking the paint of the new character
-    }
+    // Synchronous heavy computation on EVERY keystroke.
+    // fib(37) ≈ 400ms of real CPU work — blocks paint in dev AND production.
+    const _result = blockMainThread(37);
+    void _result; // prevent dead-code elimination
   };
 
   return (
@@ -77,16 +92,26 @@ function BadPractices() {
             </div>
           </div>
           <div className="p-0">
-            <img 
-              src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=100&w=3500&auto=format&fit=crop" 
-              alt="Heavy space image" 
-              className="w-full aspect-video object-cover"
-            />
+            {/* ❌ BAD LCP: src is empty until JS sets it after 3.5s */}
+            {heroSrc ? (
+              <img
+                src={heroSrc}
+                alt="Heavy space image"
+                className="w-full aspect-video object-cover"
+                // @ts-ignore
+                fetchPriority="low"
+              />
+            ) : (
+              <div className="w-full aspect-video bg-gray-800 flex flex-col items-center justify-center gap-2 animate-pulse">
+                <ImageIcon className="text-gray-600" size={32} />
+                <p className="text-gray-600 text-xs font-mono">⏳ Image loading via JS... (LCP delay)</p>
+              </div>
+            )}
             <div className="p-6">
               <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                This image is way too large (3500px wide) and unoptimized, causing a very slow Largest Contentful Paint (LCP).
+                This image is injected by JavaScript after 3.5s — the browser can't preload it, causing a very slow LCP.
               </p>
-              <Link 
+              <Link
                 to="/good-practices"
                 className="inline-flex items-center gap-2 text-xs text-orange-500 hover:text-orange-400 font-bold transition-colors"
               >
