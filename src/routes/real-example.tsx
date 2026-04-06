@@ -26,13 +26,13 @@ function RealExample() {
   }, []);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchQuery(value);
     // ❌ BAD INP: blocking main thread 200ms on every keystroke
     const start = Date.now();
-    while (Date.now() - start < 200) {
+    while (Date.now() - start < 500) {
       // intentional busy-wait — simulates heavy synchronous JS
     }
+    const value = e.target.value;
+    setSearchQuery(value);
   };
 
   const handleAddToCart = () => {
