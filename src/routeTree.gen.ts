@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VsNextRouteImport } from './routes/vs-next'
+import { Route as RealExampleRouteImport } from './routes/real-example'
 import { Route as OutletRouteImport } from './routes/outlet'
 import { Route as GoodPracticesRouteImport } from './routes/good-practices'
 import { Route as BadPracticesRouteImport } from './routes/bad-practices'
@@ -25,6 +26,11 @@ import { Route as DynamicIdRouteImport } from './routes/dynamic/$id'
 const VsNextRoute = VsNextRouteImport.update({
   id: '/vs-next',
   path: '/vs-next',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RealExampleRoute = RealExampleRouteImport.update({
+  id: '/real-example',
+  path: '/real-example',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OutletRoute = OutletRouteImport.update({
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/bad-practices': typeof BadPracticesRoute
   '/good-practices': typeof GoodPracticesRoute
   '/outlet': typeof OutletRouteWithChildren
+  '/real-example': typeof RealExampleRoute
   '/vs-next': typeof VsNextRoute
   '/dynamic/$id': typeof DynamicIdRoute
   '/outlet/child': typeof OutletChildRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/bad-practices': typeof BadPracticesRoute
   '/good-practices': typeof GoodPracticesRoute
   '/outlet': typeof OutletRouteWithChildren
+  '/real-example': typeof RealExampleRoute
   '/vs-next': typeof VsNextRoute
   '/dynamic/$id': typeof DynamicIdRoute
   '/outlet/child': typeof OutletChildRoute
@@ -117,6 +125,7 @@ export interface FileRoutesById {
   '/bad-practices': typeof BadPracticesRoute
   '/good-practices': typeof GoodPracticesRoute
   '/outlet': typeof OutletRouteWithChildren
+  '/real-example': typeof RealExampleRoute
   '/vs-next': typeof VsNextRoute
   '/dynamic/$id': typeof DynamicIdRoute
   '/outlet/child': typeof OutletChildRoute
@@ -133,6 +142,7 @@ export interface FileRouteTypes {
     | '/bad-practices'
     | '/good-practices'
     | '/outlet'
+    | '/real-example'
     | '/vs-next'
     | '/dynamic/$id'
     | '/outlet/child'
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/bad-practices'
     | '/good-practices'
     | '/outlet'
+    | '/real-example'
     | '/vs-next'
     | '/dynamic/$id'
     | '/outlet/child'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/bad-practices'
     | '/good-practices'
     | '/outlet'
+    | '/real-example'
     | '/vs-next'
     | '/dynamic/$id'
     | '/outlet/child'
@@ -176,6 +188,7 @@ export interface RootRouteChildren {
   BadPracticesRoute: typeof BadPracticesRoute
   GoodPracticesRoute: typeof GoodPracticesRoute
   OutletRoute: typeof OutletRouteWithChildren
+  RealExampleRoute: typeof RealExampleRoute
   VsNextRoute: typeof VsNextRoute
   DynamicIdRoute: typeof DynamicIdRoute
   RestSplatRoute: typeof RestSplatRoute
@@ -192,6 +205,13 @@ declare module '@tanstack/react-router' {
       path: '/vs-next'
       fullPath: '/vs-next'
       preLoaderRoute: typeof VsNextRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/real-example': {
+      id: '/real-example'
+      path: '/real-example'
+      fullPath: '/real-example'
+      preLoaderRoute: typeof RealExampleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/outlet': {
@@ -290,6 +310,7 @@ const rootRouteChildren: RootRouteChildren = {
   BadPracticesRoute: BadPracticesRoute,
   GoodPracticesRoute: GoodPracticesRoute,
   OutletRoute: OutletRouteWithChildren,
+  RealExampleRoute: RealExampleRoute,
   VsNextRoute: VsNextRoute,
   DynamicIdRoute: DynamicIdRoute,
   RestSplatRoute: RestSplatRoute,

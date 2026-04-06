@@ -15,6 +15,7 @@ import {
   ArrowRightLeft,
   AlertCircle,
   CheckCircle2,
+  BookOpen,
 } from "lucide-react";
 
 export default function Header() {
@@ -141,6 +142,12 @@ export default function Header() {
             label="Good CWV"
             icon={CheckCircle2}
             colorClass="text-green-400"
+          />
+          <NavItem
+            to="/real-example"
+            label="Real Example"
+            icon={BookOpen}
+            colorClass="text-orange-400"
           />
         </nav>
 

@@ -26,7 +26,7 @@ function BadPractices() {
     // Blocking the main thread for 150ms on EVERY keystroke.
     // This makes the input feel "heavy" and disconnected.
     const start = Date.now();
-    while (Date.now() - start < 150) {
+    while (Date.now() - start < 400) {
       // Blocking the paint of the new character
     }
   };
@@ -115,7 +115,7 @@ function BadPractices() {
                   type="text"
                   value={searchQuery}
                   onChange={handleSearchChange}
-                  placeholder="Type 'Ramadan Kareem' quickly..."
+                  placeholder="Type 'Fixed Misr' quickly..."
                   className="w-full bg-gray-800 border-2 border-gray-700 rounded-xl px-4 py-4 text-white focus:border-red-500 outline-none transition-colors"
                 />
                 {searchQuery && (
