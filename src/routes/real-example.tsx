@@ -28,12 +28,9 @@ function RealExample() {
 const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
   const value = e.target.value;
 
-  const arr = [];
-  for (let i = 0; i < 100_000_000; i++) {
-    arr.push(i * Math.random());
-  }
-
-  setSearchQuery(value);
+  setTimeout(() => {
+    setSearchQuery(value);
+  }, 500);
 };
 
   const handleAddToCart = () => {
